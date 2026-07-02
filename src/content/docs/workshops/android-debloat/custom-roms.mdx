@@ -1,0 +1,68 @@
+---
+title: "Custom ROMs"
+description: "Αντικατάσταση του λειτουργικού με custom ROM — GrapheneOS, LineageOS, CalyxOS και επαλήθευση downloads."
+sidebar:
+  order: 4
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+## Custom ROMs
+
+Το πιο ριζικό επίπεδο degoogling είναι η αντικατάσταση ολόκληρου του λειτουργικού συστήματος με ένα custom ROM βασισμένο στο AOSP, το οποίο δεν εξαρτάται (ή προσφέρει προαιρετικά) τα Google Play Services.
+
+| **ROM** | **Χαρακτηριστικά** | **Επίπεδο privacy/security** |
+|---|---|---|
+| [**GrapheneOS**](https://grapheneos.org/) | Focus σε security & privacy hardening, official support **μόνο** για Google Pixel devices, δεν έχει microG (by design — προτείνει sandboxed Google Play compatibility layer, προαιρετικό) | Πολύ υψηλό (state of the art) |
+| [**LineageOS**](https://lineageos.org/) | Ευρύτατη υποστήριξη συσκευών, community-driven, μπορεί να εγκατασταθεί με ή χωρίς gapps/microG | Μέτριο προς υψηλό, ανάλογα με config |
+| [**CalyxOS**](https://calyxos.org/) | Παρόμοιο με GrapheneOS, αλλά έρχεται προεγκατεστημένο με microG by default, επίσης κυρίως για Pixel | Υψηλό |
+| [**/e/OS**](https://e.foundation/) | Focus σε "εύκολο" degoogled εμπειρία για μη τεχνικούς χρήστες, με microG και δικές του εναλλακτικές εφαρμογές, διαθέσιμο και σε προ-εγκατεστημένες συσκευές (Fairphone κ.ά.) | Μέτριο |
+| **DivestOS** | Fork του LineageOS με focus σε security patches για παλαιότερες/μη υποστηριζόμενες συσκευές | Υψηλό (καλό για extending device lifespan) |
+
+### Πράγματα που πρέπει να ξέρεις πριν κάνεις flash custom ROM
+
+- **Bootloader unlock**: Απαραίτητο βήμα, αλλά **σβήνει όλα τα δεδομένα** της συσκευής (factory reset) και σε πολλές συσκευές (ειδικά Samsung στην Ευρώπη) μπορεί να **ακυρώσει μόνιμα** ορισμένες λειτουργίες ασφαλείας (π.χ. Samsung Knox καταστρέφεται μόνιμα με unlock).
+- **Compatibility**: Δεν υποστηρίζονται όλες οι συσκευές. Έλεγξε λίστες υποστηριζόμενων συσκευών πριν αγοράσεις συσκευή με σκοπό το ROMing.
+- **Bricking risk**: Λάθος διαδικασία μπορεί να καταστήσει τη συσκευή μη λειτουργική ("brick"). Πάντα ακολούθησε επίσημες οδηγίες του ROM project για το συγκεκριμένο μοντέλο.
+- **Εγγύηση**: Το unlocking/flashing σχεδόν πάντα ακυρώνει την εγγύηση κατασκευαστή.
+
+---
+
+## Επαλήθευση ROM downloads πριν το flash (integrity/verification)
+
+Ένα κρίσιμο, συχνά παραλειπόμενο βήμα: **πριν** κάνεις flash οτιδήποτε στη συσκευή σου, βεβαιώσου ότι το αρχείο που κατέβασες είναι πραγματικά αυτό που νομίζεις — και όχι κατεστραμμένο, ή, στη χειρότερη περίπτωση, τροποποιημένο από τρίτο (π.χ. αν το κατέβασες από mirror ή μη-επίσημη πηγή).
+
+### Βασική διαδικασία
+
+<Steps>
+
+1. **Κατέβασε πάντα από την επίσημη σελίδα** του project (όχι από forums, YouTube links, ή APK mirror sites).
+
+2. Το επίσημο site δίνει συνήθως ένα **checksum** (SHA-256 συνήθως) και/ή μια **GPG/PGP signature** δίπλα στο αρχείο.
+
+3. Υπολόγισε το checksum του αρχείου που κατέβασες τοπικά και σύγκρινέ το:
+
+   ```bash
+   # Linux/macOS
+   sha256sum image-filename.zip
+
+   # Σύγκρινε με το checksum που δίνει το επίσημο site
+   # Αν δεν ταιριάζουν byte-for-byte, ΜΗΝ προχωρήσεις σε flash
+   ```
+
+4. Αν το project παρέχει GPG signature (π.χ. GrapheneOS το κάνει αυτό συστηματικά για όλα τα releases), επαλήθευσε και την υπογραφή:
+
+   ```bash
+   # Παράδειγμα λογικής (τα ακριβή commands διαφέρουν ανά project)
+   # Δες πάντα την επίσημη τεκμηρίωση:
+   # https://grapheneos.org/verifying-installation
+   gpg --verify factory-image.zip.sig factory-image.zip
+   ```
+
+5. Για συσκευές με **Verified Boot** (π.χ. Pixel με GrapheneOS/CalyxOS), το ίδιο το bootloader επαληθεύει την υπογραφή του OS σε κάθε boot — ένα επιπλέον, ισχυρότερο επίπεδο προστασίας από tampering μετά την εγκατάσταση.
+
+</Steps>
+
+<Aside type="tip">
+**Demo idea για workshop:** Δείξε σκόπιμα ένα mismatch — κατέβασε (ή προσομοίωσε) ένα αρχείο με λάθος checksum, και δείξε πώς αποτυγχάνει η επαλήθευση. Πιο πειστικό από το να το πεις απλά θεωρητικά.
+</Aside>

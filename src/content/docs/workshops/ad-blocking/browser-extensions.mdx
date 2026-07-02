@@ -1,0 +1,108 @@
+---
+title: "Browser & Extensions"
+description: "Firefox vs Chrome, Brave, εναλλακτικοί browsers, η κρίση του Manifest V3, και τα καλύτερα extensions για ad/tracker blocking."
+sidebar:
+  order: 2
+---
+
+import { Aside, Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Browser στον υπολογιστή
+
+### Firefox αντί για Chrome
+
+Η βασική σύσταση παραμένει: **Firefox** (ή fork του, βλ. παρακάτω) αντί για Chrome.
+
+- **Όχι Google οικοσύστημα** — το Chrome είναι βασισμένο πλήρως στο ίδιο Google account/telemetry οικοσύστημα.
+- **Καλύτερη ιδιωτικότητα by default** — λιγότερη τηλεμετρία προς τον κατασκευαστή.
+- **Καταπολέμηση του μονοπωλίου στους browsers** — το Chromium (η μηχανή πίσω από Chrome, Edge, Brave, Opera) κατέχει πλέον συντριπτικό μερίδιο αγοράς. Το Firefox (Gecko engine) είναι από τους ελάχιστους μεγάλους browsers **εκτός** Chromium, κάτι κρίσιμο για την υγεία/ποικιλομορφία του web ως πλατφόρμας.
+- **Το πιο σημαντικό πρακτικό πλεονέκτημα το 2026**: το Firefox παραμένει ο μόνος mainstream browser που υποστηρίζει **πλήρως** τα παλιά, ισχυρά extensions (βλ. παρακάτω για Manifest V3).
+
+### Η "χειρότερη" εναλλακτική: Brave
+
+Το Brave αναφέρεται συχνά ως "privacy-focused" browser με built-in ad blocking (Shields), αλλά αξίζει κριτική ματιά:
+
+- **Βασισμένο σε Chromium** — άρα ενισχύει έμμεσα το μονοπώλιο της Google πάνω στο web-engine layer, ακόμα κι αν το ίδιο το Brave μπλοκάρει διαφημίσεις.
+- **Διοικείται από εταιρεία** (Brave Software) με δικό της επιχειρηματικό μοντέλο — παλαιότερα περιλάμβανε το δικό του σύστημα διαφημίσεων/κρύπτο-rewards (BAT token), κάτι που έχει προκαλέσει αντιδράσεις στην κοινότητα ανοιχτού λογισμικού.
+- Το built-in Shields **παρακάμπτει** τους περιορισμούς του Manifest V3 λειτουργώντας σε επίπεδο μηχανής και όχι ως extension — πρακτικό πλεονέκτημα, αλλά σημαίνει επίσης ότι εξαρτάσαι πλήρως από τις αποφάσεις μιας εταιρείας για το τι μπλοκάρεται, χωρίς τη διαφάνεια ενός community-maintained extension.
+
+<Aside type="tip">
+**Συμπέρασμα για workshop**: Το Brave είναι μια αποδεκτή compromise επιλογή για όσους δεν θέλουν να αλλάξουν browser engine, αλλά το Firefox παραμένει η πιο "καθαρή" επιλογή από άποψη ανοιχτότητας και ανεξαρτησίας.
+</Aside>
+
+### Άλλες αξιοσημείωτες εναλλακτικές (2026)
+
+| Browser | Βάση | Σημείωση |
+|---|---|---|
+| **LibreWolf** | Firefox fork | Firefox με ενισχυμένες προεπιλογές ιδιωτικότητας, χωρίς telemetry |
+| **Mullvad Browser** | Firefox (συνεργασία με Tor Project) | Focus σε fingerprinting resistance, καλύτερο με Mullvad VPN |
+| **Tor Browser** | Firefox fork | Μέγιστη ανωνυμία μέσω δικτύου Tor — πιο αργό, όχι για καθημερινή χρήση |
+| **Ungoogled Chromium** | Chromium χωρίς Google services | Καλή επιλογή αν χρειάζεσαι Chromium compatibility χωρίς Google telemetry |
+
+---
+
+## Η κρίση του Manifest V3
+
+Αυτό είναι το **πιο σημαντικό, πρόσφατο γεγονός** στον χώρο του ad blocking, και αξίζει ιδιαίτερη έμφαση στο workshop.
+
+### Τι είναι το Manifest V3 (MV3)
+
+Το Manifest V3 είναι το νέο πλαίσιο extensions που επέβαλε η Google στο Chrome, αντικαθιστώντας το παλιό **Manifest V2 (MV2)**. Η βασική τεχνική αλλαγή: το ισχυρό `webRequest` API (που επέτρεπε σε extensions όπως το uBlock Origin να παρεμβαίνουν *δυναμικά* σε κάθε αίτημα δικτύου σε πραγματικό χρόνο) αντικαταστάθηκε από το πολύ πιο περιορισμένο `declarativeNetRequest` API, με hard cap στον αριθμό κανόνων και χωρίς δυναμικό φιλτράρισμα.
+
+### Το χρονοδιάγραμμα
+
+- **Οκτώβριος 2024**: Η Google ξεκινά να απενεργοποιεί το MV2 στο σταθερό κανάλι Chrome, με προσωρινό toggle επαναφοράς.
+- **31 Μαρτίου 2025**: Απενεργοποίηση MV2 by default σε όλα τα κανάλια.
+- **24 Ιουλίου 2025 (Chrome 138)**: Μόνιμη απενεργοποίηση MV2 για όλους τους χρήστες — αφαιρείται και το toggle.
+- **Chrome 139**: Αφαιρείται και το enterprise policy override.
+- **Chrome 150 (30 Ιουνίου 2026)**: Αφαιρείται η τελευταία μέθοδος command-line flag που κρατούσε "ζωντανό" το uBlock Origin για τεχνικούς χρήστες.
+- **Chrome 151 (~4 εβδομάδες μετά)**: Αφαιρούνται όλα τα υπόλοιπα flags σχετικά με MV2 — **καμία λύση δεν απομένει** στο Chrome.
+
+### Τι σημαίνει αυτό στην πράξη
+
+| | Chrome (MV3 only) | Firefox | Brave |
+|---|---|---|---|
+| Πλήρες uBlock Origin | ❌ Όχι πια | ✅ Πλήρης υποστήριξη | ✅ (built-in Shields, όχι extension) |
+| uBlock Origin Lite (MV3) | ✅ Διαθέσιμο, μειωμένη λειτουργικότητα | — | — |
+| Δυναμικό φιλτράρισμα σε πραγματικό χρόνο | ❌ | ✅ | Μερικώς (engine-level) |
+| Cosmetic filtering (κρύψιμο στοιχείων σελίδας) | Περιορισμένο | Πλήρες | Πλήρες (built-in) |
+| Αποτελεσματικότητα εναντίον YouTube/SSAI ads | Χαμηλή | Καλύτερη | Καλή |
+
+Ανεξάρτητες δοκιμές δείχνουν ότι τα MV3 blockers πιάνουν περίπου **90-95%** αυτού που έπιανε το πλήρες MV2 uBlock Origin — το υπόλοιπο 5-10% αφορά ακριβώς τις πιο εξελιγμένες τεχνικές (first-party ads, server-side ad insertion, τυχαιοποιημένα URLs, anti-adblock scripts) που είναι και οι πιο ενοχλητικές στην πράξη.
+
+<Aside type="caution">
+Το ενσωματωμένο "ad filtering" του ίδιου του Chrome (βασισμένο στα standards του Coalition for Better Ads, το οποίο ιδρύθηκε εν μέρει από την ίδια τη Google) μπλοκάρει μόνο μια μικρή μερίδα (~10-12%) των πιο "κραυγαλέων" μορφών διαφήμισης (auto-play video με ήχο, pop-ups) — δεν είναι υποκατάστατο πραγματικού ad blocker.
+</Aside>
+
+### Τι να κάνεις
+
+1. **Καλύτερη λύση**: Μετακόμισε σε **Firefox** για πλήρη λειτουργικότητα.
+2. Αν πρέπει να μείνεις σε Chromium engine (π.χ. για συμβατότητα): δοκίμασε **Brave** (built-in blocking) ή Chromium forks που συνεχίζουν να υποστηρίζουν MV2.
+3. Αν μένεις σε Chrome: εγκατέστησε **uBlock Origin Lite** ως baseline, γνωρίζοντας τους περιορισμούς του.
+
+---
+
+## Επεκτάσεις (extensions) — τι να εγκαταστήσεις
+
+| Extension | Λειτουργία | Διαθεσιμότητα |
+|---|---|---|
+| **uBlock Origin** | Ο "χρυσός κανόνας" ad/tracker blocking — filter lists (EasyList, EasyPrivacy κ.ά.), cosmetic filtering, element picker | Πλήρες: Firefox, Brave. Lite: Chrome |
+| **AdNauseam** | Fork του uBlock Origin — αντί απλά να κρύβει τις διαφημίσεις, τις **κλικάρει αυτόματα** όλες, "μολύνοντας" το προφίλ tracking σου με ψευδή δεδομένα και δημιουργώντας οικονομικό κόστος στους διαφημιστές | Πλήρες: Firefox. **Αφαιρέθηκε μόνιμα από το Chrome Web Store το 2017** — σε Chromium χρειάζεται sideload |
+| **Privacy Badger** (EFF) | Μαθαίνει και μπλοκάρει trackers αυτόματα βάσει συμπεριφοράς, χωρίς προκαθορισμένες λίστες | Firefox, Chrome (MV3 compatible) |
+| **Decentraleyes** | Εξυπηρετεί τοπικά αντίγραφα δημοφιλών JS libraries (π.χ. jQuery από CDN), αποτρέποντας tracking μέσω CDN requests | Firefox, Chrome |
+| **ClearURLs** | Αφαιρεί tracking parameters από URLs (π.χ. `utm_source`, `fbclid`) πριν φορτώσει η σελίδα | Firefox, Chrome |
+| **Consent-O-Matic** | Απαντάει αυτόματα σε cookie consent banners επιλέγοντας το πιο privacy-friendly configuration | Firefox, Chrome |
+
+<Aside type="tip">
+**Σχετικά με το AdNauseam**: Είναι ένα εξαιρετικό demo/talking point για workshop hacklab — δείχνει πρακτικά πώς η "οικονομία της διαφήμισης" μπορεί να στραφεί ενάντια στον εαυτό της (οικονομικό κόστος στους διαφημιστές μέσω ψεύτικων clicks). Είναι όμως αμφιλεγόμενο: κριτικοί το χαρακτηρίζουν ως μορφή "ad fraud". Καλό σημείο συζήτησης ηθικής για το workshop.
+</Aside>
+
+### Ρύθμιση uBlock Origin (βασικές filter lists)
+
+Μετά την εγκατάσταση, στο Dashboard → Filter lists, βεβαιώσου ότι είναι ενεργά:
+
+- **EasyList** — βασικές διαφημίσεις
+- **EasyPrivacy** — trackers
+- **Peter Lowe's list** — επιπλέον ads/tracking domains
+- **Fanboy's Annoyance List** — cookie banners, newsletter popups, "annoyances"
+- Τοπική λίστα (αν υπάρχει) — π.χ. ελληνικά sites έχουν συχνά ειδικές λίστες μέσω κοινότητας

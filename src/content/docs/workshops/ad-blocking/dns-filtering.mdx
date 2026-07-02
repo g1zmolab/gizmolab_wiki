@@ -1,0 +1,58 @@
+---
+title: "DNS Filtering & Network-Level Blocking"
+description: "Φιλτράρισμα διαφημίσεων σε επίπεδο δικτύου μέσω DNS — Pi-hole, AdGuard Home, NextDNS και LibreDNS."
+sidebar:
+  order: 3
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Φιλτράρισμα σε Επίπεδο Δικτύου (DNS)
+
+Το φιλτράρισμα σε επίπεδο browser λύνει μόνο ό,τι βλέπεις **στον browser**. Πολλές συσκευές (smart TVs, κονσόλες, IoT, mobile apps) δεν έχουν καν δυνατότητα εγκατάστασης extensions. Εκεί μπαίνει το **DNS-level ad blocking**.
+
+### Πώς λειτουργεί
+
+Κάθε φορά που μια συσκευή θέλει να συνδεθεί κάπου, πρώτα κάνει ένα DNS query ("ποιο IP αντιστοιχεί στο `ad.doubleclick.net`;"). Ένα DNS ad blocker λειτουργεί ως **sinkhole**: αναγνωρίζει domains διαφημίσεων/tracking και απαντάει "δεν υπάρχει" αντί να δώσει το πραγματικό IP — η σύνδεση ποτέ δεν ξεκινάει.
+
+**Πλεονέκτημα**: προστατεύει *όλη* τη συσκευή/δίκτυο ταυτόχρονα, χωρίς να χρειάζεται εγκατάσταση σε κάθε app/browser ξεχωριστά.
+
+### Περιορισμοί
+
+<Aside type="caution">
+Σημαντικό να τα τονίσεις στο workshop — το DNS blocking δεν είναι πανάκεια:
+
+- Δεν μπορεί να μπλοκάρει διαφημίσεις που σερβίρονται από το **ίδιο domain** με το περιεχόμενο (π.χ. πολλές YouTube ads).
+- Δεν πιάνει **first-party** tracking JS (κώδικας που τρέχει μέσα στην ίδια τη σελίδα χωρίς εξωτερικό request).
+- Ολοένα και περισσότερες εφαρμογές χρησιμοποιούν το δικό τους **hardcoded DoH (DNS-over-HTTPS) resolver** μέσα στην ίδια την εφαρμογή, παρακάμπτοντας εντελώς τις ρυθμίσεις DNS του δικτύου/συσκευής.
+</Aside>
+
+### Επιλογές
+
+| Λύση | Τύπος | Σημείωση |
+|---|---|---|
+| **[LibreDNS](https://libredns.gr/)** (LibreOps) | Δημόσιος DNS resolver με ad blocking | Ελληνική/κοινοτική πρωτοβουλία, εύκολο σημείο εκκίνησης — απλά αλλάζεις DNS στη συσκευή |
+| **[NextDNS](https://nextdns.io/)** | Cloud-based DNS filtering | Δωρεάν tier, λεπτομερή real-time logs μέσω dashboard — πολύ καλό demo tool |
+| **[Pi-hole](https://pi-hole.net/)** | Self-hosted (Raspberry Pi ή VM) | Η "κλασική" λύση, τεράστια κοινότητα, μεγαλύτερο οικοσύστημα blocklists |
+| **[AdGuard Home](https://adguard.com/en/adguard-home/overview.html)** | Self-hosted (single Go binary) | Native υποστήριξη κρυπτογραφημένου DNS (DoH/DoT/DoQ), πιο μοντέρνο UI, "Service Blocking" με ένα κλικ |
+
+---
+
+### Pi-hole vs AdGuard Home — ποιο να διαλέξεις;
+
+Το 2025 το Pi-hole κυκλοφόρησε τη **v6**, μια πλήρης επανασχεδίαση: αφαίρεσε την παλιά εξάρτηση από PHP/lighttpd, ενσωμάτωσε web server και REST API απευθείας στο `pihole-FTL` binary. Παρόλα αυτά, το βασικό engine παραμένει το `dnsmasq`, οπότε το encrypted DNS (DoH/DoT) χρειάζεται ακόμα εξωτερικό εργαλείο (π.χ. `Unbound` ή `cloudflared`).
+
+| | Pi-hole (v6) | AdGuard Home |
+|---|---|---|
+| Encrypted DNS (DoH/DoT/DoQ) | Χρειάζεται εξωτερικό εργαλείο | Native, built-in |
+| Blocklist οικοσύστημα | Μεγαλύτερο, πιο ώριμο | Καλό, μικρότερο |
+| Per-client rules | Μέσω "Groups" (λιγότερο intuitive) | Native per-client, πιο εύκολο |
+| "Service blocking" με 1 κλικ (π.χ. block TikTok) | Χειροκίνητα μέσω regex/lists | Ενσωματωμένο toggle |
+| Resource footprint | Ελαφρύ (βελτιώθηκε στη v6) | Ελαφρύ |
+| Setup difficulty | CLI installer, λίγο πιο "χειροποίητο" | Web wizard, πιο guided |
+
+**Και τα δύο** αδυνατούν να λύσουν πλήρως τα YouTube/streaming ads, επειδή σερβίρονται από το ίδιο domain με το βίντεο — καλό σημείο για να δείξεις στο workshop ότι *κανένα εργαλείο δεν είναι πανάκεια από μόνο του*.
+
+<Aside type="tip">
+**Demo idea:** Τρέξε Pi-hole ή AdGuard Home σε Raspberry Pi (ή Docker container σε laptop) live, δείξε το real-time query log την ώρα που κάποιος συμμετέχων φορτώνει μια σελίδα με πολλές διαφημίσεις — θα δει ζωντανά πόσα requests μπλοκάρονται.
+</Aside>

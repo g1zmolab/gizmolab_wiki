@@ -1,0 +1,72 @@
+---
+title: "Debloating: Μέθοδοι & Εργαλεία"
+description: "Μέθοδοι debloating (Settings, ADB, Root), εργαλεία όπως UAD και Magisk, ρίσκα και προφυλάξεις."
+sidebar:
+  order: 5
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Debloating: μέθοδοι και εργαλεία
+
+### 1. Μέσω Ρυθμίσεων (χωρίς εργαλεία)
+
+Settings → Apps → επιλογή εφαρμογής → Disable / Force stop. Δεν αφαιρεί το app, απλά το απενεργοποιεί. Ασφαλέστερη μέθοδος, αναστρέψιμη, αλλά περιορισμένη — πολλά system apps δεν επιτρέπουν καν disable.
+
+### 2. Μέσω ADB (χωρίς root) — Universal Android Debloater (UAD)
+
+Το [Universal Android Debloater](https://github.com/0x192/universal-android-debloater) (και το πιο ενεργά συντηρούμενο fork [UAD-ng](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation)) είναι ένα GUI εργαλείο που:
+
+- Συνδέεται στη συσκευή μέσω ADB (χωρίς να χρειάζεται root).
+- Παρέχει **προτάσεις** debloat ανάλογα με το επίπεδο γνώσεων του χρήστη (Beginner/Advanced/Expert/Unsafe).
+- Δίνει επεξήγηση για κάθε πακέτο (τι κάνει, γιατί προτείνεται η αφαίρεση/απενεργοποίηση).
+- Έχει συγκεκριμένες, community-sourced προτάσεις ανά κατασκευαστή Android (Samsung, Xiaomi, κ.λπ.).
+- Η αφαίρεση μέσω ADB (`pm uninstall --user 0`) αφαιρεί το app **μόνο** για τον τρέχοντα χρήστη· τα δεδομένα του πακέτου παραμένουν στο σύστημα (system partition), άρα το app "εξαφανίζεται" αλλά μπορεί να επανέλθει με factory reset.
+
+### 3. Root-based debloating
+
+Με πρόσβαση root, μπορείς να αφαιρέσεις **εντελώς** system apps (π.χ. με Titanium Backup, System App Remover, ή manual αφαίρεση από το `/system/app` ή `/system/priv-app`). Πιο ριζικό, αλλά πιο επικίνδυνο — λάθος αφαίρεση κρίσιμου system component μπορεί να προκαλέσει bootloop.
+
+### Σύγκριση μεθόδων
+
+| **Μέθοδος** | **Χρειάζεται root;** | **Αναστρέψιμο;** | **Ρίσκο** |
+|---|---|---|---|
+| Disable από Ρυθμίσεις | Όχι | Ναι | Ελάχιστο |
+| ADB / UAD (`pm uninstall --user 0`) | Όχι | Ναι (με factory reset ή reinstall) | Χαμηλό |
+| Root removal (system partition) | Ναι | Δύσκολα, χρειάζεται backup | Υψηλό |
+| Custom ROM (clean flash) | Ναι (unlock) | Ναι, με πλήρες reflash | Υψηλό |
+
+---
+
+## Root: Magisk και οι κίνδυνοι του
+
+Το [Magisk](https://github.com/topjohnwu/Magisk) είναι το πιο διαδεδομένο εργαλείο για **systemless root** σε Android — τροποποιεί τη συσκευή χωρίς να αγγίζει απευθείας το system partition, κάτι που διευκολύνει τις ενημερώσεις (OTA) και κρύβει το root από ορισμένες εφαρμογές μέσω modules όπως το **Zygisk/DenyList**.
+
+**Πλεονεκτήματα:**
+
+- Πλήρης έλεγχος συσκευής, δυνατότητα αφαίρεσης οποιουδήποτε system app.
+- Modules ecosystem (π.χ. ad-blockers σε επίπεδο συστήματος, custom fonts, tweaks).
+
+**Κίνδυνοι:**
+
+- Ακύρωση εγγύησης.
+- Αύξηση επιφάνειας επίθεσης (attack surface) — αν μια κακόβουλη εφαρμογή αποκτήσει πρόσβαση root, έχει πλήρη έλεγχο της συσκευής.
+- Πολλά banking/payment apps ανιχνεύουν root (μέσω Play Integrity API) και αρνούνται να λειτουργήσουν.
+- Ρίσκο bricking σε λανθασμένη διαδικασία.
+
+<Aside type="caution">
+Για ένα workshop hacklab, καλό είναι να τονιστεί: root ≠ degoogling. Το root είναι ένα **εργαλείο** που διευκολύνει το debloating/degoogling, αλλά δεν είναι απαραίτητο βήμα από μόνο του.
+</Aside>
+
+---
+
+## Ρίσκα, backups και προφυλάξεις
+
+Πριν από οποιαδήποτε ενέργεια σε επίπεδο system (unlock, root, custom ROM), **πάντα**:
+
+1. **Backup** όλων των προσωπικών δεδομένων (φωτογραφίες, μηνύματα, επαφές) — τοπικά ή σε εναλλακτικό cloud, όχι μόνο Google Drive.
+2. Σημείωσε το **IMEI** και σχετικά στοιχεία της συσκευής, πριν οποιαδήποτε τροποποίηση.
+3. Έλεγξε αν η συσκευή σου έχει **ενεργό bootloader unlock option** στα Developer Options (OEM unlocking) — σε κάποιες συσκευές (π.χ. Samsung σε ορισμένες αγορές, ή carrier-locked συσκευές) αυτό μπορεί να είναι κλειδωμένο ή μη διαθέσιμο.
+4. Διάβασε πάντα τις **επίσημες οδηγίες** του συγκεκριμένου ROM project για το ακριβές μοντέλο συσκευής σου — οι γενικές οδηγίες δεν ισχύουν πάντα 1-προς-1 για κάθε συσκευή.
+5. Να γνωρίζεις ότι το unlocking/root/custom ROM **σχεδόν πάντα ακυρώνει την εγγύηση** — ενημέρωσε τους συμμετέχοντες του workshop για αυτό ρητά.
+6. Ξεκίνα από συσκευές "δοκιμής" (π.χ. παλιά κινητά) πριν εφαρμόσεις τεχνικές σε κύρια συσκευή.

@@ -1,0 +1,127 @@
+---
+title: "Hands-on: ADB Debloating & Network Verification"
+description: "Πρακτικό μέρος: debloating μέσω ADB, network monitoring πριν/μετά, και πηγές περαιτέρω μελέτης."
+sidebar:
+  order: 6
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+## Hands-on: Debloating μέσω ADB
+
+Βασικά βήματα για demo σε πραγματική συσκευή (Android, χωρίς root):
+
+### 1. Προετοιμασία
+
+- Ενεργοποίηση Developer Options (Ρυθμίσεις → Σχετικά με το τηλέφωνο → πάτα 7 φορές στο "Build number")
+- Ενεργοποίηση USB Debugging (Ρυθμίσεις → Developer Options → USB debugging)
+- Εγκατάσταση platform-tools (adb) στον υπολογιστή
+
+### 2. Σύνδεση συσκευής
+
+```bash
+adb devices
+# Επιβεβαίωση της σύνδεσης στο κινητό (popup "Allow USB debugging?")
+```
+
+### 3. Αφαίρεση εφαρμογής (χωρίς root, μόνο για τον τρέχοντα χρήστη)
+
+```bash
+adb shell pm list packages | grep google
+# βρίσκουμε το package name, π.χ. com.google.android.apps.tachyon (Duo)
+
+adb shell pm uninstall --user 0 com.google.android.apps.tachyon
+```
+
+### 4. Επαναφορά εφαρμογής (αν χρειαστεί)
+
+```bash
+adb shell cmd package install-existing com.google.android.apps.tachyon
+```
+
+### 5. Χρήση UAD-ng (γραφικό interface)
+
+```bash
+# Κατέβασμα από:
+# https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation
+# Σύνδεση συσκευής μέσω USB, το εργαλείο ανιχνεύει τη συσκευή αυτόματα
+# Επιλογή πακέτων προς αφαίρεση με βάση τις προτάσεις (Recommended/Advanced/Expert)
+```
+
+<Aside type="tip">
+Κατά το workshop, καλό είναι να δείξουμε live demo σε πραγματική (δοκιμαστική) συσκευή: disable ενός app από Ρυθμίσεις, μετά αφαίρεση ενός app μέσω ADB/UAD, ώστε οι συμμετέχοντες να δουν τη διαφορά.
+</Aside>
+
+---
+
+## Hands-on: Network Verification — "Δες το tracking"
+
+Το πιο πειστικό demo σε κοινό hacklab δεν είναι να πεις "αυτό το app κάνει tracking" — είναι να το **δείξεις live** στην οθόνη. Αυτή η ενότητα δείχνει πώς να παρακολουθήσεις network traffic πριν και μετά το debloating, ώστε η διαφορά να είναι ορατή, όχι θεωρητική.
+
+### Γιατί έχει νόημα αυτό το demo
+
+- Ο μέσος χρήστης βλέπει apps, όχι πακέτα δικτύου. Η τηλεμετρία της Google (και τρίτων SDKs) είναι αόρατη by design.
+- Δείχνοντας τα actual domains/endpoints στα οποία συνδέεται μια "καθαρή" (stock) συσκευή, το επιχείρημα του degoogling γίνεται απτό.
+- Επιτρέπει επίσης να δειχθεί ότι **δεν φτάνει το debloating GMS** — πολλά τρίτα apps (π.χ. social media, games) έχουν δικά τους analytics SDKs που συνεχίζουν να "καλούν σπίτι" ανεξάρτητα από Google.
+
+### Εργαλεία
+
+| **Εργαλείο** | **Τι κάνει** | **Χρειάζεται root;** |
+|---|---|---|
+| [**PCAPdroid**](https://github.com/emanuele-f/PCAPdroid) | Καταγράφει traffic σε επίπεδο πακέτου (local VPN-based capture), εξάγει .pcap για ανάλυση σε Wireshark, δείχνει live ποιο app κάνει ποια σύνδεση | Όχι (χρησιμοποιεί local VPN API) |
+| [**NetGuard**](https://www.netguard.me/) | Per-app firewall — μπλοκάρει/επιτρέπει traffic ανά εφαρμογή, log των προσπαθειών σύνδεσης | Όχι |
+| [**RethinkDNS**](https://rethinkdns.com/) | Συνδυάζει DNS-level blocking (custom blocklists) + per-app firewall + traffic logging σε ένα εργαλείο, open-source | Όχι |
+| **Wireshark** (desktop) | Για πιο βαθιά ανάλυση .pcap αρχείων που εξάγονται από το κινητό | — (desktop tool) |
+
+Και τα τρία mobile εργαλεία λειτουργούν χρησιμοποιώντας το **local VPN API** του Android (δηλαδή δημιουργούν ένα "ψεύτικο" VPN που δρομολογεί το traffic μέσα από την ίδια τη συσκευή) — άρα **δεν χρειάζονται root** και είναι κατάλληλα για live demo σε οποιαδήποτε συσκευή συμμετέχοντα.
+
+### Ενδεικτικό demo flow
+
+<Steps>
+
+1. **Πριν το debloating:** Εγκατέστησε PCAPdroid σε μια stock συσκευή (με GMS ενεργό). Ξεκίνα capture, άσε τη συσκευή σε αδράνεια (idle) για 2-3 λεπτά χωρίς να ανοίξεις κανένα app.
+
+2. Σταμάτα το capture και δείξε τη λίστα των domains που "χτύπησε" η συσκευή μόνη της — συνήθως θα δεις `googleapis.com`, `google-analytics.com`, `crashlytics.com`, `doubleclick.net`, κ.ά., **χωρίς καμία ενέργεια χρήστη**.
+
+3. **Debloat/disable** τα σχετικά Google apps/services (όπως στην προηγούμενη ενότητα).
+
+4. Επανάλαβε το idle capture για 2-3 λεπτά.
+
+5. Σύγκρινε τις δύο λίστες domains live μπροστά στους συμμετέχοντες — η διαφορά είναι συνήθως εντυπωσιακή και αυτο-αποδεικνύεται.
+
+</Steps>
+
+### Bonus: DNS-level blocking
+
+Αν θέλεις να δείξεις και πρακτική λύση παράλληλα με το demo:
+
+- **AdAway** (χρειάζεται root ή VPN-based mode) — blocklists σε επίπεδο hosts file.
+- **NextDNS** — cloud DNS filtering με λεπτομερή logs (μπορεί να δειχθεί ζωντανά στο dashboard ποιο domain μπλοκαρίστηκε, real-time, πολύ οπτικό για demo).
+
+<Aside type="caution">
+Τα local-VPN-based εργαλεία (PCAPdroid/NetGuard/RethinkDNS) δεν μπορούν να τρέξουν **ταυτόχρονα** με ένα πραγματικό VPN app (μόνο ένα VPN interface επιτρέπεται τη φορά στο Android, εκτός αν το εργαλείο υποστηρίζει "VPN chaining" σε προχωρημένη ρύθμιση). Καλό να αναφερθεί στους συμμετέχοντες πριν το demo.
+</Aside>
+
+---
+
+## Πηγές & περαιτέρω μελέτη
+
+- microG — [https://microg.org/](https://microg.org/)
+- F-Droid — [https://f-droid.org/](https://f-droid.org/)
+- GrapheneOS — [https://grapheneos.org/](https://grapheneos.org/)
+- LineageOS — [https://lineageos.org/](https://lineageos.org/)
+- CalyxOS — [https://calyxos.org/](https://calyxos.org/)
+- /e/OS — [https://e.foundation/](https://e.foundation/)
+- Universal Android Debloater (UAD-ng) — [https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation](https://github.com/Universal-Debloater-Alliance/universal-android-debloater-next-generation)
+- Magisk — [https://github.com/topjohnwu/Magisk](https://github.com/topjohnwu/Magisk)
+- NewPipe — [https://newpipe.net/](https://newpipe.net/)
+- ReVanced — [https://revanced.app/](https://revanced.app/)
+- Aurora Store — [https://gitlab.com/AuroraOSS/AuroraStore](https://gitlab.com/AuroraOSS/AuroraStore)
+- Obtainium — [https://github.com/ImranR98/Obtainium](https://github.com/ImranR98/Obtainium)
+- Aegis Authenticator — [https://getaegis.app/](https://getaegis.app/)
+- PCAPdroid — [https://github.com/emanuele-f/PCAPdroid](https://github.com/emanuele-f/PCAPdroid)
+- NetGuard — [https://www.netguard.me/](https://www.netguard.me/)
+- RethinkDNS — [https://rethinkdns.com/](https://rethinkdns.com/)
+- NextDNS — [https://nextdns.io/](https://nextdns.io/)
+- GrapheneOS: Verifying Installation — [https://grapheneos.org/verifying-installation](https://grapheneos.org/verifying-installation)
+- Privacy Guides — [https://www.privacyguides.org/](https://www.privacyguides.org/)

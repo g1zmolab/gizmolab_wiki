@@ -1,0 +1,70 @@
+/* Custom CSS variables to style the Starlight wiki with the Gizmolab orange theme */
+
+:root {
+	/* Gizmolab Orange Theme - Dark Mode (Default) */
+	--sl-color-accent-low: hsl(26, 82%, 15%);
+	--sl-color-accent: hsl(26, 95%, 69%);
+	--sl-color-accent-high: hsl(26, 100%, 87%);
+
+	/* Background and base dark colors tuned for a clean cyber aesthetic */
+	--sl-color-bg: hsl(225, 15%, 9%);
+	--sl-color-bg-nav: hsl(225, 15%, 11%);
+	--sl-color-bg-sidebar: hsl(225, 15%, 10%);
+	--sl-color-gray-6: hsl(225, 15%, 12%);
+	--sl-color-gray-5: hsl(225, 10%, 20%);
+	--sl-color-gray-4: hsl(225, 8%, 38%);
+	--sl-color-gray-3: hsl(225, 6%, 58%);
+	--sl-color-gray-2: hsl(225, 6%, 78%);
+	--sl-color-gray-1: hsl(225, 10%, 94%);
+}
+
+html[data-theme='light'] {
+	/* Gizmolab Orange Theme - Light Mode */
+	--sl-color-accent-low: hsl(26, 90%, 92%);
+	--sl-color-accent: hsl(26, 90%, 48%);
+	--sl-color-accent-high: hsl(26, 100%, 25%);
+
+	/* Light mode gray scale overrides */
+	--sl-color-bg: hsl(0, 0%, 100%);
+	--sl-color-bg-nav: hsl(220, 10%, 97%);
+	--sl-color-bg-sidebar: hsl(220, 10%, 96%);
+	--sl-color-gray-6: hsl(220, 10%, 95%);
+	--sl-color-gray-5: hsl(220, 10%, 90%);
+	--sl-color-gray-4: hsl(220, 8%, 50%);
+	--sl-color-gray-3: hsl(220, 6%, 40%);
+	--sl-color-gray-2: hsl(220, 6%, 25%);
+	--sl-color-gray-1: hsl(220, 10%, 15%);
+}
+
+/* Custom UI refinements for a modern technical look */
+.site-title {
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+/* Make headers look sharp */
+h1, h2, h3, h4, h5, h6 {
+	letter-spacing: -0.01em;
+}
+
+/* Dark/Light hero logo switching */
+:root[data-theme='dark'] .light-only,
+:root:not([data-theme='light']) .light-only {
+	display: none !important;
+}
+
+:root[data-theme='light'] .dark-only {
+	display: none !important;
+}
+
+.hero-logo {
+	max-width: 100%;
+	height: auto;
+}
+
+/* Make hero image link clickable */
+.hero .hero-html a {
+	display: block;
+	pointer-events: auto;
+	cursor: pointer;
+}

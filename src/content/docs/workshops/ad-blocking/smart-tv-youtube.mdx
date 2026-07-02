@@ -1,0 +1,87 @@
+---
+title: "Smart TV & YouTube"
+description: "Ad blocking σε Smart TV/Google TV μέσω SmartTube, και η ειδική περίπτωση του YouTube (SSAI, anti-adblock, troubleshooting)."
+sidebar:
+  order: 5
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+## Google TV / Android TV / Smart TV
+
+Αυτό είναι το πιο δύσκολο πεδίο μάχης, γιατί:
+
+- Οι εφαρμογές σε smart TV/streaming boxes σπάνια υποστηρίζουν extensions.
+- Πολλές πλατφόρμες (Google TV, Fire TV) έχουν **δικές τους** ενσωματωμένες διαφημίσεις στο ίδιο το home screen/launcher — αυτό δεν λύνεται με κανένα app, μόνο με network-level filtering ή αλλαγή launcher.
+- Report του 2026 δείχνει ότι το YouTube έχει αρχίσει να προβάλλει **διαφημίσεις 90+ δευτερολέπτων** σε smart TV apps, σημαντικά πιο επιθετικές σε σχέση με mobile/desktop.
+
+### Network-level filtering (η βάση για TV)
+
+Επειδή τα TV apps δεν υποστηρίζουν extensions, το **DNS-level filtering στο επίπεδο router** (Pi-hole/AdGuard Home, ή Private DNS ρυθμισμένο απευθείας στο TV αν υποστηρίζεται) είναι η **πρώτη γραμμή άμυνας** — προστατεύει αυτόματα κάθε συσκευή στο σπίτι, TVs συμπεριλαμβανομένων.
+
+### SmartTube (πρώην SmartTubeNext / SmartYouTubeTV)
+
+Το πιο αποτελεσματικό εργαλείο ειδικά για YouTube σε Android TV/Google TV:
+
+- **Ανεξάρτητος client YouTube**, όχι patch πάνω στην επίσημη εφαρμογή — δεν εξαρτάται καθόλου από τα Google Play Services.
+- Πλήρως ad-free εμπειρία (καμία διαφήμιση πριν/κατά τη διάρκεια βίντεο).
+- Ενσωματωμένο **SponsorBlock**.
+- Δουλεύει σε: Android TV boxes (Xiaomi, Onn κ.ά.), Google TV (Chromecast with Google TV, Google TV Streamer), Amazon Fire TV, NVIDIA Shield, Sony Bravia.
+- **Δεν** είναι διαθέσιμο στο Play Store — χρειάζεται sideloading.
+
+**Εγκατάσταση (σύντομη περιγραφή):**
+
+<Steps>
+1. Ενεργοποίηση Developer Options στο TV (Settings → About → πάτα 7 φορές στο build number).
+2. Ενεργοποίηση "Install unknown apps" για κάποια εφαρμογή file manager (π.χ. Downloader by AFTVnews, ή X-plore).
+3. Κατέβασμα του APK απευθείας στο TV μέσω browser/Downloader app, ή μεταφορά μέσω USB stick, ή μέσω ADB.
+4. Εγκατάσταση, και σύνδεση λογαριασμού (προαιρετικά) μέσω κωδικού ενεργοποίησης (youtube.com/activate).
+</Steps>
+
+<Aside type="tip">
+Σύσταση της κοινότητας: προτίμησε το **Beta branch** του SmartTube — παίρνει ενημερώσεις πιο συχνά, κάτι σημαντικό γιατί η Google αλλάζει το backend της YouTube τακτικά με στόχο να "σπάσει" τέτοιες εναλλακτικές εφαρμογές.
+</Aside>
+
+### Άλλες εναλλακτικές
+
+| App | Πλατφόρμα | Σημείωση |
+|---|---|---|
+| **NewPipe** | Android (όχι ειδικά TV) | Καλό για tablet/κινητό, δεν είναι βελτιστοποιημένο για TV interface |
+| **SkyTube** | Android | Ελαφρύ, απλούστερο interface |
+
+---
+
+## Ειδική περίπτωση: YouTube
+
+Το YouTube αξίζει ξεχωριστή ενότητα γιατί είναι η πιο δύσκολη, πιο "εξελισσόμενη" μάχη σε όλο το πεδίο του ad blocking, και σχεδόν σίγουρα το πιο συχνό ερώτημα σε ένα workshop.
+
+### Γιατί είναι τόσο δύσκολο
+
+- **Server-Side Ad Insertion (SSAI)**: το YouTube πλέον "ράβει" τη διαφήμιση **μέσα** στο ίδιο video stream πριν καν φτάσει στον browser/συσκευή σου — δεν υπάρχει ξεχωριστό network request για να μπλοκάρει ένας παραδοσιακός filter-based blocker. Η διαφήμιση και το περιεχόμενο έρχονται σαν ένα ενιαίο κομμάτι δεδομένων.
+- **Ενεργή ανίχνευση (anti-adblock detection)**: το YouTube ανιχνεύει τη χρήση ad blockers και εμφανίζει προειδοποιήσεις, κλιμακούμενες μετά από επαναλήψεις — αυτό είναι ένα **client-side flag** αποθηκευμένο σε cookies/local storage, **όχι** μόνιμος αποκλεισμός λογαριασμού.
+
+### Τι δουλεύει το 2026 (ενδεικτικά, αλλάζει συχνά)
+
+| Πλατφόρμα | Καλύτερη επιλογή |
+|---|---|
+| Desktop browser | **uBlock Origin σε Firefox** — πλήρες φιλτράρισμα, ενημέρωση φίλτρων συχνά |
+| Desktop (Chrome) | uBlock Origin Lite ή Brave — μειωμένη αποτελεσματικότητα |
+| Android app | **ReVanced** — η πιο αξιόπιστη δωρεάν λύση |
+| Android (browser) | Firefox for Android + uBlock Origin |
+| iOS | Καμία πλήρης λύση — DNS profile + Brave browser ως μερική λύση |
+| Google TV / Android TV | **SmartTube** |
+| Οποιαδήποτε συσκευή, μηδενική ταλαιπωρία | **YouTube Premium** (επίσημη, πληρωμένη λύση) |
+
+### Πρακτικά troubleshooting tips
+
+<Aside type="tip">
+Αυτά τα tips είναι ιδανικά για handout:
+
+- Αν εμφανιστεί προειδοποίηση ad blocker: καθάρισε cookies/local storage για το youtube.com (Developer Tools → Application → Local Storage → δεξί κλικ → Clear) — συνήθως αρκεί.
+- Ενημέρωσε τις filter lists του blocker σου τακτικά (καθημερινά, αν είναι δυνατόν) — το YouTube αλλάζει το backend του πολύ συχνά.
+- **Μην στοιβάζεις πολλαπλά ad blockers ταυτόχρονα** — προκαλεί conflicts στα φίλτρα και αυξάνει, παραδόξως, το ποσοστό ανίχνευσης.
+</Aside>
+
+### Η ηθική διάσταση
+
+Το YouTube Premium (και οι αντίστοιχες συνδρομές μεγάλων πλατφορμών) αποτελεί την **μόνη** επίσημη οδό όπου το χρήμα πηγαίνει (εν μέρει) στους δημιουργούς περιεχομένου. Το workshop οφείλει να αναφέρει ρητά αυτή τη διάσταση — βλ. ενότητα [Layered Approach & Ηθικά Ζητήματα](/workshops/ad-blocking/layered-approach-ethics/).

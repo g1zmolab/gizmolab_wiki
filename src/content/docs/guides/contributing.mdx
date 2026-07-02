@@ -1,0 +1,96 @@
+---
+title: Πώς να Συνεισφέρετε στο Wiki
+description: Οδηγός για το πώς να προσθέσετε νέα workshops, οδηγούς ή να επεξεργαστείτε το περιεχόμενο του Gizmolab Wiki.
+sidebar:
+  order: 1
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+
+Το Gizmolab Wiki είναι ένα συλλογικό έργο. Κάθε μέλος του hacklab μπορεί να προσθέσει νέους οδηγούς, workshops ή να διορθώσει υπάρχοντα κείμενα. Το wiki είναι γραμμένο σε **Markdown** και βασίζεται στο **Starlight (Astro)**.
+
+---
+
+## 1. Πώς να Προσθέσετε ένα Νέο Workshop
+
+Όλα τα workshops βρίσκονται στον φάκελο `src/content/docs/workshops/`.
+
+<Steps>
+1. **Δημιουργία Αρχείου**:
+   Δημιουργήστε ένα νέο αρχείο με κατάληξη `.mdx` μέσα στον φάκελο `src/content/docs/workshops/`. Για παράδειγμα: `cnc-milling.mdx`.
+   
+   Το όνομα του αρχείου (χωρίς την κατάληξη) θα είναι και το URL της σελίδας (π.χ. `/workshops/cnc-milling/`).
+
+2. **Προσθήκη Frontmatter**:
+   Κάθε αρχείο πρέπει να ξεκινάει με τις βασικές πληροφορίες (metadata) ανάμεσα σε τρεις παύλες `---`:
+   ```markdown
+   ---
+   title: Workshop: Χρήση του CNC Router
+   description: Οδηγός εκμάθησης και ασφάλειας για το CNC του εργαστηρίου.
+   sidebar:
+     order: 4
+   ---
+   ```
+   *Το `sidebar.order` ορίζει τη σειρά εμφάνισης στο μενού.*
+
+3. **Συγγραφή Περιεχομένου**:
+   Γράψτε το κείμενό σας χρησιμοποιώντας απλή σύνταξη Markdown. Μπορείτε να χρησιμοποιήσετε και έτοιμα Starlight components (δείτε παρακάτω).
+</Steps>
+
+---
+
+## 2. Χρήσιμα Components για τους Οδηγούς
+
+Το Starlight προσφέρει έτοιμα στοιχεία για να κάνετε το κείμενο πιο διαδραστικό:
+
+### Ειδοποιήσεις (Asides)
+Μπορείτε να προσθέσετε σημειώσεις, συμβουλές ή προειδοποιήσεις:
+
+```markdown
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="note">Αυτή είναι μια απλή σημείωση.</Aside>
+<Aside type="tip">Αυτή είναι μια χρήσιμη συμβουλή.</Aside>
+<Aside type="caution">Αυτή είναι μια προειδοποίηση προσοχής.</Aside>
+<Aside type="danger">Αυτός είναι ένας κρίσιμος κανόνας ασφαλείας!</Aside>
+```
+
+### Βήμα-Βήμα Οδηγοί (Steps)
+Ιδανικό για οδηγίες συναρμολόγησης ή εγκατάστασης λογισμικού:
+
+```markdown
+import { Steps } from '@astrojs/starlight/components';
+
+<Steps>
+1. Κατεβάστε το λογισμικό.
+2. Συνδέστε τη συσκευή μέσω USB.
+3. Πατήστε "Upload".
+</Steps>
+```
+
+### Καρτέλες (Tabs)
+Χρήσιμο όταν θέλετε να δείξετε οδηγίες για διαφορετικά λειτουργικά συστήματα ή συσκευές:
+
+```markdown
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="Windows">Οδηγίες για Windows...</TabItem>
+  <TabItem label="Linux">Οδηγίες για Linux...</TabItem>
+</Tabs>
+```
+
+---
+
+## 3. Τοπικός Έλεγχος (Local Development)
+
+Για να δείτε τις αλλαγές σας πριν τις δημοσιεύσετε:
+
+<Steps>
+1. Ανοίξτε το τερματικό στον φάκελο του έργου.
+2. Τρέξτε την εντολή:
+   ```bash
+   npm run dev
+   ```
+3. Ανοίξτε τον browser στη διεύθυνση `http://localhost:4321`. Κάθε φορά που αποθηκεύετε ένα αρχείο, η σελίδα θα ανανεώνεται αυτόματα!
+</Steps>

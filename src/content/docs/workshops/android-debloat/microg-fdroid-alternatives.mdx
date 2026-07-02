@@ -1,0 +1,85 @@
+---
+title: "MicroG, F-Droid & Εναλλακτικές Εφαρμογές"
+description: "Open-source εναλλακτικές στα Google Play Services, app stores χωρίς tracking και εφαρμογές ανά κατηγορία."
+sidebar:
+  order: 3
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## MicroG
+
+Το [microG](https://microg.org/) είναι μια **open-source υλοποίηση** των βασικών Google Play Services APIs, σχεδιασμένη ώστε εφαρμογές που "περιμένουν" GMS να συνεχίσουν να λειτουργούν, χωρίς να τρέχει το πραγματικό, proprietary Google Play Services.
+
+- Μπορεί να έρθει **προεγκατεστημένο** μαζί με ορισμένα custom ROMs (π.χ. LineageOS for microG, /e/OS, CalyxOS), ή να εγκατασταθεί **χειροκίνητα**.
+- Χρησιμοποιεί ανοιχτά backends (π.χ. Mozilla Location Service για υπηρεσίες τοποθεσίας αντί για το proprietary Google backend).
+- Είναι σημαντικά πιο ελαφρύ σε κατανάλωση πόρων σε σχέση με το πλήρες GMS.
+
+### Σύγκριση Google Play Services vs microG
+
+| **Χαρακτηριστικό** | **Google Play Services** | **microG** |
+|---|---|---|
+| Σκοπός | Πλήρες proprietary service | Open-source αντικατάσταση core υπηρεσιών |
+| Ιδιοκτησία | Google | Open-source κοινότητα |
+| Open-source | Όχι | Ναι |
+| Υποστηριζόμενα APIs | Πλήρης σουίτα APIs | Μόνο βασικά/κύρια APIs |
+| Υπηρεσίες τοποθεσίας | Proprietary backend Google | Εναλλακτικά, π.χ. Mozilla backend |
+| Κατανάλωση μπαταρίας | Μπορεί να είναι βαρύ | Ελαφρύ και αποδοτικό |
+| Privacy | Υψηλή συλλογή δεδομένων | Ελάχιστη συλλογή δεδομένων |
+| Push notifications | Ενσωματωμένο μέσω GCM/FCM | Υποστηρίζει, αλλά μπορεί να απενεργοποιηθεί |
+| Συμβατότητα με apps | Καθολική για GMS-dependent apps | Λειτουργεί με τα περισσότερα, αλλά κάποιες advanced λειτουργίες αποτυγχάνουν |
+| SafetyNet/Play Integrity | Πλήρες (device certification) | Μερικό ή spoofed — περιορισμένη συμβατότητα |
+| Έλεγχος από τον χρήστη | Περιορισμένος | Υψηλός (μπορείς να απενεργοποιήσεις επιμέρους components) |
+
+### Περιορισμοί του microG
+
+- Δεν υποστηρίζει 1-προς-1 όλα όσα προσφέρει το πραγματικό Google Play Services.
+- Ορισμένες εφαρμογές (κυρίως banking apps, ορισμένα games με anti-cheat, ή apps που ελέγχουν **Play Integrity API**) απλά δεν λειτουργούν σωστά με microG, γιατί ανιχνεύουν ότι η συσκευή δεν είναι "πιστοποιημένη".
+- Η εγκατάσταση μπορεί να είναι πολύπλοκη, ειδικά αν χρειάζεται signature spoofing.
+
+---
+
+## F-Droid και εναλλακτικά app stores
+
+Το [F-Droid](https://f-droid.org/) είναι ένα open-source app store που διαθέτει **αποκλειστικά open-source εφαρμογές**, χωρίς proprietary tracking SDKs. Είναι το βασικό "goto" store σε degoogled συσκευές.
+
+- Ελαφριές υλοποιήσεις, χωρίς data collection.
+- Reproducible builds για πολλά apps (μπορείς να επιβεβαιώσεις ότι το APK αντιστοιχεί στον δημοσιευμένο κώδικα).
+- Δεν έχει τόσο μεγάλο εύρος εφαρμογών όσο το Play Store — π.χ. δεν θα βρεις εκεί εμπορικά/κλειστά apps όπως το Instagram ή banking apps.
+
+### Άλλα εναλλακτικά stores
+
+| **Store** | **Περιγραφή** |
+|---|---|
+| **Aurora Store** | Ανώνυμο "front-end" για το Play Store — κατεβάζει APKs από τα Google servers χωρίς λογαριασμό Google (ή με anonymous/dummy λογαριασμό), χωρίς να χρειάζεται εγκατάσταση GMS |
+| **Accrescent** | Νεότερο, security-focused store για open-source apps, με αυστηρότερα κριτήρια ασφαλείας από το F-Droid |
+| **IzzyOnDroid** (F-Droid repo) | Επιπλέον repository για F-Droid client με περισσότερα open-source apps |
+| **Obtainium** | Εργαλείο που παρακολουθεί releases apps απευθείας από GitHub/GitLab και τα ενημερώνει αυτόματα, χωρίς store |
+
+---
+
+## Εναλλακτικές εφαρμογές ανά κατηγορία
+
+| **Κατηγορία** | **Google εφαρμογή** | **Εναλλακτικές** |
+|---|---|---|
+| Αναζήτηση | Google Search | DuckDuckGo, Startpage, Brave Search |
+| Browser | Chrome | Firefox, Fennec (de-googled Firefox build), DuckDuckGo Browser, Brave |
+| Email | Gmail | K-9 Mail, Proton Mail, Fairemail, Thunderbird |
+| Ημερολόγιο | Google Calendar | Etar, Proton Calendar |
+| Gallery | Google Photos | Aves, Simple Gallery |
+| Βίντεο/Μουσική (YouTube) | YouTube, YouTube Music | NewPipe, YouTube via ReVanced (ή ReVanced Extended), LibreTube, FreeTube (desktop) |
+| Χάρτες/Πλοήγηση | Google Maps | OrganicMaps, OsmAnd, Magic Earth |
+| Διαχείριση αρχείων | Google Files | Amaze, Material Files |
+| Σημειώσεις | Google Keep | Standard Notes, Joplin |
+| Cloud storage | Google Drive | Nextcloud, Proton Drive, Syncthing (peer-to-peer, χωρίς cloud) |
+| Μηνύματα/SMS | Google Messages | Signal (για encrypted messaging), QUIK SMS, Simple SMS Messenger |
+| Βιντεοκλήσεις | Google Meet/Duo | Jitsi Meet, Signal calls, Element (Matrix) |
+| Μετάφραση | Google Translate | LibreTranslate, DeepL (proprietary αλλά καλή εναλλακτική) |
+| Podcasts | Google Podcasts | AntennaPod |
+| App Store | Play Store | F-Droid, Aurora Store, Accrescent |
+| 2FA/Authenticator | Google Authenticator | Aegis Authenticator, andOTP (archived, μη ενεργό πλέον — προτίμησε Aegis) |
+| Network monitoring | — | NetGuard, PCAPdroid, RethinkDNS |
+
+<Aside type="caution">
+**Σχετικά με 2FA:** Το Google Authenticator πλέον κάνει by-default cloud backup των TOTP secrets στον λογαριασμό Google (εκτός αν το απενεργοποιήσεις χειροκίνητα) — κάτι που πολλοί δεν γνωρίζουν και είναι απευθείας αντίθετο με το πνεύμα του degoogling. Το **Aegis** είναι ανοιχτού κώδικα, αποθηκεύει τοπικά (με δυνατότητα encrypted export/backup με δική σου επιλογή), και είναι διαθέσιμο στο F-Droid.
+</Aside>

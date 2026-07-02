@@ -1,0 +1,44 @@
+---
+title: gizmo_lab wiki
+description: Το κέντρο τεκμηρίωσης του gizmo_lab. Workshops, οδηγοί εργαλείων και κατασκευές.
+template: splash
+hero:
+  tagline: Καλώς ήρθατε στο κέντρο τεκμηρίωσης του gizmo_lab. Εδώ καταγράφουμε workshops, οδηγούς χρήσης εργαλείων και τις κατασκευές μας.
+  image:
+    html: '<a href="https://gizmolab.net" target="_blank" style="display:block;pointer-events:auto;cursor:pointer;"><img src="/logo-dark.svg" class="dark-only hero-logo" alt="gizmo_lab logo" /><img src="/logo-light.svg" class="light-only hero-logo" alt="gizmo_lab logo" /></a>'
+  actions:
+    - text: Δες το wiki
+      link: /workshops/
+      icon: right-arrow
+    - text: Πώς να συνεισφέρεις
+      link: /guides/contributing/
+      icon: document
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Τι θα βρείτε εδώ
+
+<CardGrid stagger>
+	<a href="/workshops/" style="text-decoration: none; color: inherit;">
+	<Card title="Workshops και οδηγοί" icon="open-book">
+		Αναλυτικοί οδηγοί, παρουσιάσεις και κώδικας από τα workshops που διοργανώνουμε στο gizmo_lab.
+	</Card>
+	</a>
+	<a href="/equipment/" style="text-decoration: none; color: inherit;">
+	<Card title="Καταγραφή Εξοπλισμού Εργαστηρίου" icon="setting">
+		Αναλυτική λίστα των εργαλείων και εξαρτημάτων του εργαστηρίου υπολογιστών, ηλεκτρονικών, ξυλουργικής, 3D printing και του studio.
+	</Card>
+	</a>
+	<a href="/projects/" style="text-decoration: none; color: inherit;">
+	<Card title="Community Projects" icon="rocket">
+		Καταγραφή των software και hardware projects που κατασκευάζουν τα μέλη μας, με σχέδια, BOM, οδηγίες και τεκμηρίωση.
+	</Card>
+	</a>
+	<a href="/guides/contributing/" style="text-decoration: none; color: inherit;">
+	<Card title="Συνεισφορά στο Wiki" icon="pencil">
+		Μάθετε πώς να προσθέσετε τη δική σας σελίδα ή workshop χρησιμοποιώντας απλά αρχεία Markdown.
+	</Card>
+	</a>
+</CardGrid>

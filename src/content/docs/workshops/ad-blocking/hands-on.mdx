@@ -1,0 +1,140 @@
+---
+title: "Hands-on: Εγκαταστάσεις Βήμα-Βήμα"
+description: "Πρακτικές οδηγίες εγκατάστασης — Firefox + uBlock Origin, Private DNS, Pi-hole, AdGuard Home, ReVanced και SmartTube."
+sidebar:
+  order: 7
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+## Hands-on: Εγκαταστάσεις βήμα-βήμα
+
+### 1. Firefox + uBlock Origin (desktop)
+
+<Steps>
+1. Κατέβασε Firefox από [mozilla.org/firefox](https://www.mozilla.org/firefox/)
+2. Μέσα στο Firefox, πήγαινε στο [uBlock Origin addon page](https://addons.mozilla.org/firefox/addon/ublock-origin/)
+3. "Add to Firefox" → επιβεβαίωση εγκατάστασης
+4. Κλικ στο εικονίδιο uBlock Origin → gear icon (Dashboard)
+5. Filter lists tab → βεβαιώσου ότι **EasyList**, **EasyPrivacy**, **Fanboy's Annoyance** είναι επιλεγμένα → "Update now"
+</Steps>
+
+---
+
+### 2. Private DNS σε Android (system-wide DNS blocking)
+
+<Steps>
+1. Άνοιξε **Ρυθμίσεις → Network & Internet → Private DNS**
+2. Επίλεξε "Private DNS provider hostname"
+3. Πληκτρολόγησε:
+   ```
+   dns.adguard.com
+   ```
+   ή αν χρησιμοποιείς NextDNS:
+   ```
+   dns.nextdns.io/<το δικό σου config ID>
+   ```
+4. Πάτα **Save**
+</Steps>
+
+---
+
+### 3. Pi-hole (demo σε Raspberry Pi ή Docker)
+
+**Εγκατάσταση σε Raspberry Pi / Linux:**
+
+```bash
+curl -sSL https://install.pi-hole.net | bash
+```
+
+**Ή μέσω Docker:**
+
+```bash
+docker run -d \
+  --name pihole \
+  -p 53:53/tcp -p 53:53/udp -p 80:80 \
+  -e TZ="Europe/Athens" \
+  -v "$(pwd)/etc-pihole:/etc/pihole" \
+  --restart=unless-stopped \
+  pihole/pihole:latest
+```
+
+<Steps>
+1. Τρέξε μία από τις παραπάνω εντολές
+2. Σημείωσε τον κωδικό admin που εμφανίζεται στο τέλος
+3. Βάλε το IP του Pi-hole ως DNS server στο router σου (ή σε κάθε συσκευή ξεχωριστά για δοκιμή)
+4. Άνοιξε `http://<IP>/admin` για το dashboard
+</Steps>
+
+---
+
+### 4. AdGuard Home (εναλλακτικό demo)
+
+```bash
+docker run -d \
+  --name adguardhome \
+  -p 53:53/tcp -p 53:53/udp -p 3000:3000/tcp \
+  -v "$(pwd)/adguard/work:/opt/adguardhome/work" \
+  -v "$(pwd)/adguard/conf:/opt/adguardhome/conf" \
+  --restart=unless-stopped \
+  adguard/adguardhome:latest
+```
+
+<Steps>
+1. Τρέξε την παραπάνω εντολή
+2. Άνοιξε `http://<IP>:3000` στον browser
+3. Ακολούθα τον setup wizard (επιλογή port, username, password)
+4. Ρύθμισε τη συσκευή/router να χρησιμοποιεί το IP ως DNS
+</Steps>
+
+---
+
+### 5. ReVanced (Android, YouTube)
+
+<Steps>
+1. Κατέβασε **ReVanced Manager** από [revanced.app](https://revanced.app/) (ΜΟΝΟ επίσημη πηγή)
+2. Άνοιξε το Manager → Patcher → Select an Application → **YouTube**
+3. Άφησε τα προεπιλεγμένα patches επιλεγμένα → **Patch**
+4. Εγκατέστησε επίσης **GmsCore/MicroG** μέσα από το Manager (για login)
+5. Αν έχεις ήδη το επίσημο YouTube app: **απεγκατέστησέ το πρώτα**
+6. Άνοιξε το πατσαρισμένο app → Install → σύνδεση λογαριασμού (προαιρετικό)
+</Steps>
+
+<Aside type="caution">
+Κατέβαζε πάντα τον ReVanced Manager **μόνο** από την επίσημη σελίδα (revanced.app). Third-party mirrors μπορεί να περιέχουν malware.
+</Aside>
+
+---
+
+### 6. SmartTube (Google TV / Android TV)
+
+<Steps>
+1. Στο TV: **Settings → About** → πάτα 7 φορές στο build number (Developer mode)
+2. Εγκατέστησε "**Downloader**" app (by AFTVnews) από το Play Store του TV
+3. Μέσα στο Downloader, βάλε URL: `https://smarttube.app/`
+4. Κατέβασε και εγκατέστησε το APK
+5. Άνοιξε SmartTube → προαιρετική σύνδεση μέσω `youtube.com/activate`
+</Steps>
+
+<Aside type="tip">
+Κατά το workshop, καλό είναι να δείξεις **live** τη διαφορά πριν/μετά σε πραγματική συσκευή δοκιμής — φόρτωσε μια σελίδα με πολλές διαφημίσεις χωρίς blocker, μετά ενεργοποίησε το uBlock Origin και δείξε πόσο "καθαρίζει" η σελίδα.
+</Aside>
+
+---
+
+## Πηγές & περαιτέρω μελέτη
+
+- [uBlock Origin](https://ublockorigin.com/)
+- [AdNauseam](https://adnauseam.io/)
+- [Privacy Badger (EFF)](https://privacybadger.org/)
+- [LibreDNS](https://libredns.gr/)
+- [NextDNS](https://nextdns.io/)
+- [Pi-hole](https://pi-hole.net/)
+- [AdGuard Home](https://adguard.com/en/adguard-home/overview.html)
+- [ReVanced](https://revanced.app/)
+- [SmartTube (GitHub)](https://github.com/yuliskov/SmartTube)
+- [NewPipe](https://newpipe.net/)
+- [LibreWolf](https://librewolf.net/)
+- [Mullvad Browser](https://mullvad.net/browser)
+- [Chromium Manifest V3 documentation](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3)
+- [Coalition for Better Ads](https://www.betterads.org/)

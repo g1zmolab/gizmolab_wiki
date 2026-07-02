@@ -1,0 +1,68 @@
+---
+title: "Κινητά: Android & iOS"
+description: "Ad blocking σε κινητές συσκευές — Private DNS, Firefox mobile, ReVanced, per-app firewalls και οι περιορισμοί του iOS."
+sidebar:
+  order: 4
+---
+
+import { Aside, Steps } from '@astrojs/starlight/components';
+
+## Κινητά: Android
+
+### Private DNS (DNS-over-TLS)
+
+Το Android υποστηρίζει native **Private DNS** από το Android 9+ (Ρυθμίσεις → Δίκτυο & Internet → Private DNS):
+
+```
+Ρυθμίσεις → Network & Internet → Private DNS → Private DNS provider hostname
+π.χ.: dns.adguard.com  ή  dns.nextdns.io/<config-id>  (αν χρησιμοποιείς NextDNS)
+```
+
+Αυτό εφαρμόζει DNS-level ad blocking σε **όλες** τις εφαρμογές της συσκευής, όχι μόνο στον browser — πολύ ισχυρό, πολύ εύκολο demo.
+
+### Browser στο κινητό
+
+- **Firefox για Android** υποστηρίζει πλέον πλήρως extensions, συμπεριλαμβανομένου του uBlock Origin — καλή, εύκολη λύση για browsing.
+- Το Chrome στο Android (όπως και στο iOS) **δεν υποστηρίζει καθόλου** extensions — μόνο τα ενσωματωμένα, περιορισμένα φίλτρα.
+
+### ReVanced (YouTube, Instagram, κ.ά.)
+
+Το ReVanced είναι ο επίσημος διάδοχος του παλιότερου YouTube Vanced (που έκλεισε μετά από νομική όχληση της Google το 2022). Λειτουργεί με **patching** — παίρνεις το επίσημο APK μιας εφαρμογής (π.χ. YouTube) και του εφαρμόζεις "patches" τοπικά, που αφαιρούν διαφημίσεις και προσθέτουν λειτουργίες (background play, SponsorBlock, custom themes).
+
+**Πώς λειτουργεί στην πράξη:**
+
+<Steps>
+1. Κατέβασμα του **ReVanced Manager** από την επίσημη πηγή ([revanced.app](https://revanced.app/)) — ποτέ από third-party mirrors.
+2. Επιλογή εφαρμογής (π.χ. YouTube) μέσα από τον Manager.
+3. Εγκατάσταση **GmsCore/MicroG** μέσα από το Manager — απαραίτητο για σύνδεση με Google account (τα credentials σου **δεν** περνάνε ποτέ μέσα από κώδικα του ReVanced — η αυθεντικοποίηση γίνεται μέσω OAuth της Google, υλοποιημένο από το MicroG).
+4. Απεγκατάσταση της επίσημης εφαρμογής για αποφυγή conflict.
+5. Sideloading (εγκατάσταση εκτός Play Store) — χρειάζεται ενεργοποίηση "Install unknown apps".
+6. Ενημερώσεις γίνονται **χειροκίνητα** (όχι μέσω Play Store) — κάθε 2-4 εβδομάδες περίπου.
+</Steps>
+
+<Aside type="caution">
+**Ρίσκο λογαριασμού**: Παραβιάζει τους Όρους Χρήσης της Google, αλλά **δεν υπάρχουν τεκμηριωμένες περιπτώσεις μαζικού banning** λογαριασμών ειδικά λόγω χρήσης ReVanced. Το πραγματικό ρίσκο είναι μικρό αλλά όχι μηδενικό — καλή πρακτική είναι να μη χρησιμοποιείς τον κύριο/προσωπικό σου λογαριασμό.
+</Aside>
+
+### Per-app firewall / DNS εργαλεία (χωρίς root)
+
+- **RethinkDNS** — per-app firewall + DNS blocking σε ένα εργαλείο, open-source
+- **NetGuard** — per-app firewall
+- **AdGuard for Android** — system-wide ad blocking μέσω local VPN, χωρίς root
+
+Όλα λειτουργούν μέσω του local VPN API του Android — άρα **δεν χρειάζονται root**, αλλά δεν μπορούν να τρέξουν ταυτόχρονα με πραγματικό VPN app (μόνο ένα VPN interface τη φορά, εκτός από προχωρημένη ρύθμιση "VPN chaining").
+
+---
+
+## Κινητά: iOS
+
+Το iOS είναι σημαντικά πιο περιορισμένο λόγω του κλειστού οικοσυστήματος της Apple:
+
+- **Δεν υπάρχει αντίστοιχο του ReVanced** — το sandboxing του iOS δεν επιτρέπει patching εφαρμογών όπως στο Android.
+- **Safari Content Blockers**: εφαρμογές όπως **AdGuard for Safari** ή **1Blocker** λειτουργούν ως content blocker extensions μέσα στο Safari — αποτελεσματικές μόνο εντός του browser, όχι μέσα σε native apps.
+- **DNS profiles**: μπορείς να εγκαταστήσεις configuration profile από **NextDNS** ή **AdGuard DNS** app, που εφαρμόζει system-wide DNS filtering — η πιο αποτελεσματική λύση σε iOS, καλύπτει και native apps (μέχρι τα όρια του DNS blocking).
+- Browsers τρίτων (Firefox, Brave) στο iOS **δεν υποστηρίζουν extensions**, επειδή η Apple επιβάλλει σε όλους τους browsers iOS να χρησιμοποιούν τη δική της μηχανή rendering (WebKit) — μόνο το Safari έχει πρόσβαση στο content-blocking API.
+
+<Aside type="tip">
+**Σύνοψη για iOS**: DNS profile (NextDNS/AdGuard DNS) + AdGuard for Safari είναι η ρεαλιστική "καλύτερη δυνατή" λύση, με σαφώς μικρότερη αποτελεσματικότητα σε σχέση με Android/desktop.
+</Aside>
