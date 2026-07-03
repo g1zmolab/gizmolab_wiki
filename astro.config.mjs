@@ -49,6 +49,11 @@ export default defineConfig({
 							collapsed: true,
 							items: [{ autogenerate: { directory: 'workshops/ad-blocking' } }],
 						},
+						{
+							label: 'Linux Mint Workshop',
+							collapsed: true,
+							items: [{ autogenerate: { directory: 'workshops/linux-mint' } }],
+						},
 					],
 				},
 				{

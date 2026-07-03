@@ -1,0 +1,100 @@
+---
+title: "Εγκατάσταση Προγραμμάτων & Τερματικό"
+description: "APT, Software Manager, Flatpak, .deb αρχεία και χρήσιμες εντολές τερματικού."
+sidebar:
+  order: 6
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Τι είναι το APT
+
+Το Linux Mint (όπως και πολλές άλλες διανομές) βασίζεται στο Debian και το Ubuntu. Αυτά χρησιμοποιούν ένα σύστημα διαχείρισης πακέτων που λέγεται **APT** — από το "Advanced Package Tool".
+
+Το APT είναι ο τρόπος με τον οποίο το Linux εγκαθιστά, ενημερώνει και αφαιρεί προγράμματα αυτόματα από το internet, κατευθείαν από επίσημες πηγές.
+
+Αντί να μπαίνεις σε site, να κατεβάζεις ένα `.exe` και να το εγκαθιστάς, στο Linux γράφεις:
+
+```bash
+sudo apt update
+sudo apt install vlc
+```
+
+Το APT χρησιμοποιεί **repositories** — δηλαδή "επίσημες αποθήκες λογισμικού" που περιέχουν όλα τα προγράμματα. Έτσι δεν χρειάζεται να ανησυχείς για ιούς ή πειρατικά αρχεία, αρκεί να μένεις εντός των επίσημων repos.
+
+---
+
+## Software Manager
+
+Ο Software Manager είναι στην ουσία ένα γραφικό περιβάλλον (GUI) πάνω από το APT. Αν δεν θες να γράφεις εντολές στο τερματικό, μπορείς να ανοίξεις τον Software Manager και να κάνεις τα ίδια πράγματα με ένα κλικ.
+
+Παράδειγμα (εγκατάσταση GIMP): Menu → Administration → Software Manager → γράψε "GIMP" → πάτα "Install". Κάνει στο παρασκήνιο την ίδια δουλειά με το `sudo apt install gimp`.
+
+---
+
+## Flatpak
+
+Το **Flatpak** είναι ένας πιο σύγχρονος τρόπος διανομής εφαρμογών. Οι εφαρμογές Flatpak ενημερώνονται ξεχωριστά και είναι πάντα στην πιο πρόσφατη έκδοση. Ένα Flatpak πακέτο περιέχει ό,τι χρειάζεται μια εφαρμογή για να τρέξει, ανεξάρτητα από το τι έκδοση έχει το σύστημά σου — σαν "φορητό πρόγραμμα" που λειτουργεί παντού με τον ίδιο τρόπο.
+
+**Πλεονεκτήματα:**
+- Τρέχουν απομονωμένα (sandboxed) → περισσότερη ασφάλεια
+- Εύκολες ενημερώσεις
+- Μπορείς να έχεις πολλαπλές εκδόσεις της ίδιας εφαρμογής
+
+**Μειονεκτήματα:**
+- Παίρνουν περισσότερο χώρο στον δίσκο
+- Ξεκινούν λίγο πιο αργά
+- Δεν ενσωματώνονται πάντα τέλεια στο σύστημα
+
+---
+
+## .deb αρχεία
+
+Στο Linux, τα προγράμματα διανέμονται σε μορφή "πακέτων". Τα `.deb` είναι πακέτα εγκατάστασης για Debian-based συστήματα όπως το Ubuntu και το Mint — το αντίστοιχο των `.exe` στα Windows ή των `.pkg` στο macOS. Κατεβάζουμε `.deb` αρχεία από επίσημες σελίδες όταν ένα πρόγραμμα δεν υπάρχει στα repos.
+
+```bash
+sudo dpkg -i package-name.deb
+```
+
+**Πλεονεκτήματα:**
+- Εύκολη εγκατάσταση με διπλό κλικ
+- Προέρχονται συχνά από τους ίδιους τους developers
+- Ιδανικά για λογισμικά εκτός αποθετηρίων (π.χ. Chrome, VS Code)
+
+**Μειονεκτήματα:**
+- Δεν ενημερώνονται αυτόματα (αν δεν προστεθεί repo)
+- Μπορεί να έχουν εξαρτήσεις που λείπουν
+- Αν κατέβουν από μη αξιόπιστη πηγή, μπορεί να είναι μη ασφαλή
+
+<Aside type="caution">
+Κατεβάζουμε `.deb` μόνο από τις επίσημες σελίδες των εφαρμογών.
+</Aside>
+
+---
+
+## Χρήσιμες εντολές τερματικού
+
+```bash
+sudo apt update && sudo apt upgrade      # Ενημέρωση λίστας πακέτων + αναβάθμιση συστήματος
+sudo apt install [package-name]          # Εγκατάσταση προγράμματος
+sudo apt remove [package-name]           # Αφαίρεση προγράμματος
+flatpak install flathub [app-name]       # Εγκατάσταση Flatpak εφαρμογής
+flatpak update                           # Ενημέρωση Flatpak εφαρμογών
+sudo dpkg -i file.deb                    # Εγκατάσταση .deb πακέτου
+sudo apt --fix-broken install            # Επιδιόρθωση σπασμένων εξαρτήσεων
+apt search [keyword]                     # Αναζήτηση πακέτου στα repos
+```
+
+---
+
+## Πηγές
+
+- Linux Mint — επίσημο site: [linuxmint.com](https://linuxmint.com)
+- Linux Mint — οδηγίες εγκατάστασης: [linuxmint.com/documentation.php](https://linuxmint.com/documentation.php)
+- Linux Mint Community forums: [community.linuxmint.com](https://community.linuxmint.com)
+- Ubuntu Packages: [packages.ubuntu.com](https://packages.ubuntu.com)
+- Rufus (bootable USB): [rufus.ie](https://rufus.ie/)
+- Ventoy: [ventoy.net](https://www.ventoy.net/en/index.html)
+- Timeshift documentation: [github.com/linuxmint/timeshift](https://github.com/linuxmint/timeshift)
+- YouTube — Linux Mint Complete Beginner's Guide: [YouTube Playlist](https://www.youtube.com/playlist?list=PLrW4kXWyzgoKKLkdHTH8E5v_JboLeAITi)
+- Flathub (κατάλογος Flatpak εφαρμογών): [flathub.org](https://flathub.org)

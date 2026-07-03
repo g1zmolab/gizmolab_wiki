@@ -1,0 +1,70 @@
+---
+title: "Checklist Συμμετέχοντα"
+description: "Handout με checklist για τη διάρκεια της εγκατάστασης Linux Mint."
+sidebar:
+  order: 7
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="tip">
+Κράτα αυτή τη σελίδα ανοιχτή κατά τη διάρκεια της εγκατάστασης.
+</Aside>
+
+## 0. Πριν ξεκινήσεις
+
+- [ ] Backup όλων των προσωπικών αρχείων σε εξωτερικό δίσκο/cloud
+- [ ] USB stick τουλάχιστον 4GB (θα διαγραφεί ό,τι έχει)
+- [ ] Αν κρατάς dual-boot με Windows: απενεργοποίησε "Γρήγορη εκκίνηση" (Fast Startup)
+- [ ] Σιγουρέψου ότι ο υπολογιστής είναι στο ρεύμα (όχι μόνο μπαταρία) κατά την εγκατάσταση
+
+## 1. Λήψεις (μόνο επίσημες πηγές)
+
+- [ ] Linux Mint 22.3 Cinnamon ISO: [linuxmint.com/download.php](https://linuxmint.com/download.php)
+- [ ] Rufus (τελευταία έκδοση): [rufus.ie](https://rufus.ie/)
+
+<Aside type="caution">
+Ποτέ από sites τρίτων/αποτελέσματα αναζήτησης — υπάρχουν ενεργά ψεύτικα sites που μιμούνται εργαλεία του Linux Mint οικοσυστήματος.
+</Aside>
+
+## 2. Δημιουργία USB
+
+- [ ] Άνοιξε Rufus → επίλεξε USB → επίλεξε το ISO αρχείο → START
+- [ ] Partition scheme: GPT (για σύγχρονα UEFI συστήματα)
+- [ ] Περίμενε να ολοκληρωθεί (5-15 λεπτά)
+
+## 3. Εκκίνηση από USB
+
+- [ ] Επανεκκίνηση → boot menu (συνήθως F12/Esc/F2/Del) → επίλεξε το USB
+- [ ] Secure Boot: συνήθως ΔΕΝ χρειάζεται απενεργοποίηση (μόνο αν έχεις πρόβλημα)
+
+## 4. Εγκατάσταση
+
+- [ ] Δοκίμασε πρώτα σε Live mode (Wi-Fi, ήχος, γραφικά)
+- [ ] Διπλό κλικ "Install Linux Mint"
+- [ ] Γλώσσα → Ελληνικά, Πληκτρολόγιο → Greek
+- [ ] "Install multimedia codecs"
+- [ ] Τύπος εγκατάστασης:
+  - **Alongside Windows** → κρατάς dual-boot
+  - **Erase disk** → αντικαθιστάς εντελώς (διαγράφει τα πάντα)
+  - **Something else** → χειροκίνητο partitioning (προχωρημένοι)
+- [ ] Ζώνη ώρας: Athens/Europe
+- [ ] Δημιουργία λογαριασμού χρήστη (username χωρίς κεφαλαία/τόνους)
+- [ ] Περίμενε, επανεκκίνηση, αφαίρεσε το USB όταν σου ζητηθεί
+
+## 5. Αμέσως μετά την εγκατάσταση
+
+- [ ] Update Manager → εγκατάσταση όλων των ενημερώσεων
+- [ ] Driver Manager → έλεγχος για proprietary drivers (ειδικά NVIDIA)
+- [ ] **Timeshift** → ρύθμισε αυτόματα snapshots + δημιούργησε ένα πρώτο χειροκίνητα
+- [ ] Firewall Configuration → ενεργοποίηση
+
+## 6. Βασικά για να ξεκινήσεις
+
+| Θέλω να... | Πώς |
+|---|---|
+| Εγκαταστήσω πρόγραμμα (εύκολο) | Software Manager → αναζήτηση → Install |
+| Εγκαταστήσω πρόγραμμα (τερματικό) | `sudo apt install package-name` |
+| Ενημερώσω το σύστημα | `sudo apt update && sudo apt upgrade` |
+| Βρω πού είναι τα αρχεία μου | `/home/your-username/` |
+| Επαναφέρω το σύστημα αν κάτι χάλασε | Timeshift → Restore |
