@@ -24,13 +24,6 @@ pnpm-debug.log*
 .vscode/
 .idea/
 
-# source files (raw workshop drafts, not part of the site)
-*.pptx
-Android_Debloat_Degoogle_Guide.md
-Katapolemisi_Diafimiseon_Guide.md
-Handout_Checklist.md
-twang
-
 # AI agent config
 AGENTS.md
 CLAUDE.md

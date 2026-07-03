@@ -3,11 +3,12 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "dev:bg": "astro dev --background",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
+    "postinstall": "astro telemetry disable",
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "dev:bg": "ASTRO_TELEMETRY_DISABLED=1 astro dev --background",
+    "start": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "astro": "astro"
   },
   "dependencies": {
