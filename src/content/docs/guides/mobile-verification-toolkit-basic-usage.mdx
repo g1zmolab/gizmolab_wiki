@@ -1,0 +1,259 @@
+---
+title: Android Forensics με AndroidQF & MVT
+description: Οδηγός συλλογής και ανάλυσης Android forensic δεδομένων με AndroidQF και MVT για τον εντοπισμό πιθανών ενδείξεων spyware μέσω Indicators of Compromise.
+---
+
+# Android Forensics με AndroidQF & MVT
+
+Το παρακάτω workflow παρουσιάζει τη διαδικασία συλλογής και ανάλυσης forensic δεδομένων από μια συσκευή Android με χρήση των εργαλείων **AndroidQF** και **Mobile Verification Toolkit (MVT)**.
+
+Στόχος είναι η αναζήτηση γνωστών **Indicators of Compromise (IOCs)**, δηλαδή τεχνικών ενδείξεων που μπορεί να σχετίζονται με spyware ή άλλο κακόβουλο λογισμικό.
+
+:::caution
+Η διαδικασία αυτή δεν αντικαθιστά μια πλήρη ψηφιακή εγκληματολογική εξέταση από εξειδικευμένο προσωπικό.
+
+Τα αποτελέσματα πρέπει να αξιολογούνται πάντα στο πλαίσιο μιας συνολικής forensic διερεύνησης.
+:::
+
+---
+
+## Επισκόπηση Workflow
+
+Η διαδικασία αποτελείται από τα παρακάτω στάδια:
+
+1. Συλλογή forensic δεδομένων με **AndroidQF**
+2. Εγκατάσταση και προετοιμασία **MVT**
+3. Λήψη δημόσιων IOC databases
+4. Ανάλυση των δεδομένων
+5. Αξιολόγηση αποτελεσμάτων
+
+---
+
+# AndroidQF
+
+## Τι είναι το AndroidQF;
+
+Το **Android Quick Forensics (AndroidQF)** είναι ένα εργαλείο ανοιχτού κώδικα που αυτοματοποιεί τη συλλογή forensic δεδομένων από Android συσκευές μέσω του **Android Debug Bridge (ADB)**.
+
+Αντί να εκτελούνται πολλές διαφορετικές εντολές χειροκίνητα, το AndroidQF συγκεντρώνει σε έναν ενιαίο φάκελο χρήσιμα forensic artifacts όπως:
+
+- Android backup
+- Bugreport
+- Logcat
+- Πληροφορίες συσκευής
+- Λίστα εγκατεστημένων εφαρμογών
+- Άλλα system artifacts
+
+Τα δεδομένα αυτά μπορούν στη συνέχεια να αναλυθούν από εργαλεία όπως το MVT.
+
+---
+
+# Mobile Verification Toolkit (MVT)
+
+## Τι είναι το MVT;
+
+Το **Mobile Verification Toolkit (MVT)** είναι ένα εργαλείο ανοιχτού κώδικα για forensic ανάλυση δεδομένων από κινητές συσκευές.
+
+Χρησιμοποιείται για την αναζήτηση γνωστών:
+
+- spyware indicators
+- κακόβουλων domains
+- ύποπτων εφαρμογών
+- άλλων τεχνικών δεικτών συμβιβασμού
+
+Το MVT συγκρίνει τα δεδομένα μιας συσκευής με διαθέσιμες IOC συλλογές και δημιουργεί αναφορές με πιθανά ευρήματα.
+
+---
+
+# Προαπαιτούμενα
+
+Πριν ξεκινήσετε χρειάζεστε:
+
+- Υπολογιστή με Linux, macOS ή Windows
+- Python 3
+- pip
+- USB καλώδιο
+- Android συσκευή
+- Δικαιώματα ενεργοποίησης Developer Options
+
+---
+
+# 1. Εγκατάσταση AndroidQF
+
+Repository:
+
+https://github.com/botherder/androidqf
+
+Κατεβάστε την τελευταία έκδοση από τη σελίδα των Releases.
+
+Σε Linux:
+
+```bash
+chmod +x androidqf_vX.Y_linux_amd64
+```
+
+:::tip
+Αντικαταστήστε το `vX.Y` με την έκδοση που κατεβάσατε.
+:::
+
+---
+
+# 2. Ενεργοποίηση USB Debugging
+
+Για να μπορέσει ο υπολογιστής να επικοινωνήσει με τη συσκευή μέσω ADB:
+
+1. Ανοίξτε:
+
+```text
+Settings → About phone
+```
+
+2. Πατήστε επανειλημμένα στο:
+
+```text
+Build Number
+```
+
+3. Ενεργοποιήστε:
+
+```text
+Developer Options → USB Debugging
+```
+
+4. Συνδέστε τη συσκευή μέσω USB.
+
+5. Επιβεβαιώστε το μήνυμα:
+
+```text
+Allow USB debugging
+```
+
+Περισσότερες πληροφορίες:
+
+https://developer.android.com/studio/debug/dev-options#enable
+
+---
+
+# 3. Συλλογή Forensic Data
+
+Συνδέστε τη συσκευή στον υπολογιστή και εκτελέστε:
+
+```bash
+./androidqf_vX.Y_linux_amd64
+```
+
+Ακολουθήστε τις οδηγίες που εμφανίζονται στην οθόνη.
+
+Με την ολοκλήρωση της διαδικασίας θα δημιουργηθεί ένας φάκελος με τα συλλεγμένα forensic δεδομένα.
+
+Παράδειγμα δομής:
+
+```text
+androidqf-output/
+├── backup/
+├── bugreport/
+├── logs/
+├── packages/
+└── device-info/
+```
+
+Ο φάκελος αυτός θα χρησιμοποιηθεί στο επόμενο στάδιο.
+
+---
+
+# 4. Εγκατάσταση MVT
+
+Repository:
+
+https://github.com/mvt-project/mvt
+
+Εγκατάσταση:
+
+```bash
+pip3 install mvt
+```
+
+---
+
+## Λήψη IOC Database
+
+Κατεβάστε τους διαθέσιμους Indicators of Compromise:
+
+```bash
+mvt-android download-iocs
+```
+
+---
+
+# Indicators of Compromise (IOC)
+
+Οι **Indicators of Compromise (IOCs)** είναι τεχνικά στοιχεία που έχουν συσχετιστεί με γνωστές επιθέσεις ή κακόβουλο λογισμικό.
+
+Παραδείγματα:
+
+- Domains
+- URLs
+- File hashes
+- Package names
+- Malware artifacts
+- Command & Control υποδομές
+
+Το MVT χρησιμοποιεί αυτά τα δεδομένα ώστε να ελέγξει αν κάποιο γνωστό στοιχείο εμφανίζεται στα forensic artifacts της συσκευής.
+
+:::note
+Οι δημόσιες IOC συλλογές βασίζονται κυρίως σε διαθέσιμες έρευνες και δημοσιευμένα δεδομένα, όπως αυτά της Amnesty International Security Lab.
+
+Δεν περιλαμβάνουν απαραίτητα όλες τις σύγχρονες τεχνικές ή υποδομές spyware.
+:::
+
+---
+
+# 5. Ανάλυση με MVT
+
+Χρησιμοποιήστε τον φάκελο που δημιουργήθηκε από το AndroidQF:
+
+```bash
+mvt-android check-androidqf /path/to/androidqf-output
+```
+
+Σε περίπτωση κρυπτογραφημένου Android backup, το MVT θα ζητήσει τον κωδικό:
+
+```text
+Enter backup password:
+```
+
+---
+
+# Αποτελέσματα Ανάλυσης
+
+Το MVT συγκρίνει τα δεδομένα της συσκευής με τις διαθέσιμες IOC συλλογές και δημιουργεί αναφορές.
+
+## Δεν βρέθηκαν ευρήματα
+
+Δεν εντοπίστηκαν γνωστοί Indicators of Compromise.
+
+## Βρέθηκαν ευρήματα
+
+Υπάρχουν στοιχεία που χρειάζονται περαιτέρω διερεύνηση.
+
+:::danger
+Ένα IOC match δεν αποτελεί απόδειξη ότι η συσκευή έχει μολυνθεί.
+
+Αντίστοιχα, η απουσία ευρημάτων δεν εγγυάται ότι η συσκευή είναι ασφαλής.
+:::
+
+---
+
+# Χρήσιμοι Σύνδεσμοι
+
+- AndroidQF  
+  https://github.com/botherder/androidqf
+
+- Mobile Verification Toolkit (MVT)  
+  https://github.com/mvt-project/mvt
+
+- MVT Documentation  
+  https://docs.mvt.re/
+
+- Android Developer Options  
+  https://developer.android.com/studio/debug/dev-options#enable
