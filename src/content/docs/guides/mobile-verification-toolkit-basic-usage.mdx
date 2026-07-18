@@ -3,6 +3,8 @@ title: Android Forensics με AndroidQF & MVT
 description: Οδηγός συλλογής και ανάλυσης Android forensic δεδομένων με AndroidQF και MVT για τον εντοπισμό πιθανών ενδείξεων spyware μέσω Indicators of Compromise.
 ---
 
+import { Steps, Aside } from '@astrojs/starlight/components';
+
 Το παρακάτω workflow παρουσιάζει τη διαδικασία συλλογής και ανάλυσης forensic δεδομένων από μια συσκευή Android με χρήση των εργαλείων **AndroidQF** και **Mobile Verification Toolkit (MVT)**.
 
 Στόχος είναι η αναζήτηση γνωστών **Indicators of Compromise (IOCs)**, δηλαδή τεχνικών ενδείξεων που μπορεί να σχετίζονται με spyware ή άλλο κακόβουλο λογισμικό.
@@ -27,9 +29,9 @@ description: Οδηγός συλλογής και ανάλυσης Android foren
 
 ---
 
-# AndroidQF
+## AndroidQF
 
-## Τι είναι το AndroidQF;
+### Τι είναι το AndroidQF;
 
 Το **Android Quick Forensics (AndroidQF)** είναι ένα εργαλείο ανοιχτού κώδικα που αυτοματοποιεί τη συλλογή forensic δεδομένων από Android συσκευές μέσω του **Android Debug Bridge (ADB)**.
 
@@ -46,9 +48,9 @@ description: Οδηγός συλλογής και ανάλυσης Android foren
 
 ---
 
-# Mobile Verification Toolkit (MVT)
+## Mobile Verification Toolkit (MVT)
 
-## Τι είναι το MVT;
+### Τι είναι το MVT;
 
 Το **Mobile Verification Toolkit (MVT)** είναι ένα εργαλείο ανοιχτού κώδικα για forensic ανάλυση δεδομένων από κινητές συσκευές.
 
@@ -63,7 +65,7 @@ description: Οδηγός συλλογής και ανάλυσης Android foren
 
 ---
 
-# Προαπαιτούμενα
+## Προαπαιτούμενα
 
 Πριν ξεκινήσετε χρειάζεστε:
 
@@ -76,7 +78,7 @@ description: Οδηγός συλλογής και ανάλυσης Android foren
 
 ---
 
-# 1. Εγκατάσταση AndroidQF
+## 1. Εγκατάσταση AndroidQF
 
 Repository:
 
@@ -96,35 +98,29 @@ chmod +x androidqf_vX.Y_linux_amd64
 
 ---
 
-# 2. Ενεργοποίηση USB Debugging
+## 2. Ενεργοποίηση USB Debugging
 
 Για να μπορέσει ο υπολογιστής να επικοινωνήσει με τη συσκευή μέσω ADB:
 
+<Steps>
 1. Ανοίξτε:
-
-```text
-Settings → About phone
-```
-
+   ```text
+   Settings → About phone
+   ```
 2. Πατήστε επανειλημμένα στο:
-
-```text
-Build Number
-```
-
+   ```text
+   Build Number
+   ```
 3. Ενεργοποιήστε:
-
-```text
-Developer Options → USB Debugging
-```
-
+   ```text
+   Developer Options → USB Debugging
+   ```
 4. Συνδέστε τη συσκευή μέσω USB.
-
 5. Επιβεβαιώστε το μήνυμα:
-
-```text
-Allow USB debugging
-```
+   ```text
+   Allow USB debugging
+   ```
+</Steps>
 
 Περισσότερες πληροφορίες:
 
@@ -132,7 +128,7 @@ https://developer.android.com/studio/debug/dev-options#enable
 
 ---
 
-# 3. Συλλογή Forensic Data
+## 3. Συλλογή Forensic Data
 
 Συνδέστε τη συσκευή στον υπολογιστή και εκτελέστε:
 
@@ -159,7 +155,7 @@ androidqf-output/
 
 ---
 
-# 4. Εγκατάσταση MVT
+## 4. Εγκατάσταση MVT
 
 Repository:
 
@@ -173,7 +169,7 @@ pip3 install mvt
 
 ---
 
-## Λήψη IOC Database
+### Λήψη IOC Database
 
 Κατεβάστε τους διαθέσιμους Indicators of Compromise:
 
@@ -183,7 +179,7 @@ mvt-android download-iocs
 
 ---
 
-# Indicators of Compromise (IOC)
+## Indicators of Compromise (IOC)
 
 Οι **Indicators of Compromise (IOCs)** είναι τεχνικά στοιχεία που έχουν συσχετιστεί με γνωστές επιθέσεις ή κακόβουλο λογισμικό.
 
@@ -206,7 +202,7 @@ mvt-android download-iocs
 
 ---
 
-# 5. Ανάλυση με MVT
+## 5. Ανάλυση με MVT
 
 Χρησιμοποιήστε τον φάκελο που δημιουργήθηκε από το AndroidQF:
 
@@ -222,15 +218,15 @@ Enter backup password:
 
 ---
 
-# Αποτελέσματα Ανάλυσης
+## Αποτελέσματα Ανάλυσης
 
 Το MVT συγκρίνει τα δεδομένα της συσκευής με τις διαθέσιμες IOC συλλογές και δημιουργεί αναφορές.
 
-## Δεν βρέθηκαν ευρήματα
+### Δεν βρέθηκαν ευρήματα
 
 Δεν εντοπίστηκαν γνωστοί Indicators of Compromise.
 
-## Βρέθηκαν ευρήματα
+### Βρέθηκαν ευρήματα
 
 Υπάρχουν στοιχεία που χρειάζονται περαιτέρω διερεύνηση.
 
@@ -242,7 +238,7 @@ Enter backup password:
 
 ---
 
-# Χρήσιμοι Σύνδεσμοι
+## Χρήσιμοι Σύνδεσμοι
 
 - AndroidQF  
   https://github.com/botherder/androidqf
